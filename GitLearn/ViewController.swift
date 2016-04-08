@@ -8,11 +8,15 @@
 
 import UIKit
 
-class ViewController: UIViewController,UITextFieldDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
+class BeautyViewController: UIViewController{
 
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var texField: UITextField!
     @IBOutlet weak var imageOutlet: UIImageView!
+
+    @IBOutlet weak var saveButton: UIBarButtonItem!
+    @IBOutlet weak var ratingControl: RatingView!
+    var beauty: Beauty?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,27 +24,12 @@ class ViewController: UIViewController,UITextFieldDelegate,UIImagePickerControll
         
 
     }
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
-        texField.resignFirstResponder()
-        return true
-    }
-    func textFieldDidEndEditing(textField: UITextField) {
-        nameLabel.text = texField.text
-
-    }
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-        let SelectImage = info[UIImagePickerControllerOriginalImage] as! UIImage
-        imageOutlet.image = SelectImage
-        dismissViewControllerAnimated(true, completion: nil)
-    }
-    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-        dismissViewControllerAnimated(true, completion: nil)
-    }
+    
+    
     
     @IBAction func changNameButton(sender: UIButton) {
         texField.text = ""
@@ -57,7 +46,43 @@ class ViewController: UIViewController,UITextFieldDelegate,UIImagePickerControll
         
     }
     
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if saveButton === sender {
+            let name = texField.text ?? ""
+            let photo = imageOutlet.image
+            let rating = ratingControl.rating
+            
+            beauty = Beauty(name: name, photo: photo, rating: rating)
+        }
+    }
     
+
     
 }
+extension BeautyViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        texField.resignFirstResponder()
+        return true
+    }
+    func textFieldDidEndEditing(textField: UITextField) {
+        nameLabel.text = texField.text
+        
+    }
+    
+}
+extension BeautyViewController: UIImagePickerControllerDelegate{
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        let SelectImage = info[UIImagePickerControllerOriginalImage] as! UIImage
+        imageOutlet.image = SelectImage
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+}
+extension BeautyViewController: UINavigationControllerDelegate {
+    
+}
+
 
